@@ -145,6 +145,8 @@ La línes de petición tiene la siguiente sitaxis:
 + request-URL: Especifica el recurso requisitado.
 + HTTP-version: Dos versiones son actualmente utilizadas: HTTP/1.0 y HTTP/1.1.
 
+```
+
 Ejemplos de líneas de petición:
 
 ```
@@ -208,3 +210,38 @@ El cuerpo del mensaje de respuesta contiene los datos de los recursos solicitado
 En la imagen se muestra un ejemplo de un mensaje de respuesta:
 ![alt text](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTTP_ResponseMessageExample.png)
 
+**Métodos de Petición HTTP**
+ --- 
+El protocolo HTTP define una serie de métodos de petición. Un cliente puede utilizar uno de esos métodos para enviar mensajes de petición a un servidor HTPP. Los métodos son:
++ GET: Un cliente puede utilizar una petición GET para obtener un recurso web de unl servidor.
++ HEAD: Un cliente puede utilizar una petición HEAD para obtenert la cabecera que la petición GET obtuvo. Como la cabecera contiene las fecha de última modificación puede ser utilizado para ompararlo con la copia caché local.
++ POST: Es utilizado para publicar información en el servidor web.
++ PUT: Pide al servidor que almacene datos.
++ DELETE: Pide al servidor eliminar datos.
++ TRACE: Pide al servidor un rastreo de diagnóstico de las medidas que adopta.
++ OPTIONS: Pide al servidor que regrese una lista de métodos de petición que maneja.
++ CONNECT: Se utiliza para pedirle a un proxy que establezca una conexión con otro host y sólo debe responder el contenido, sin intentar analizar o almacenar en caché. Esto a menudo se utiliza para hacer la conexión SSL a través del proxy.
++ Otros métodos de extensión.
+
+**Método de petición "GET"**
+ ---
+GET es el método de petición más común en HTTP. Un cliente use el método de petición GET para solicitar (u "obtener") una parte de un recurso en un servidor HTTP. Un mensaje de petición GET tiene la siguiente sintaxis:
+
+```
+ GET *request-URI HTTP-version
+ (optional request headers)
+ (blank line)
+ (optional request body)*
+```
+
++ La palabra clave GET es distingue entre mayúsculas y minúsculas.
++ *request-URI*: Especifica la ruta del recurso solicitado, la cual debe empezar desde la raíz "/" del directorio de la base de documentos.
++ *HTTP-version**: HTTP / 1.0 o HTTP / 1.1. Este cliente negocia el protocolo a utilizar para la sesión actual. Por ejemplo, el cliente puede solicitar el uso de HTTP / 1.1. Si el servidor no soporta el protocolo HTTP / 1.1, puede informar al cliente en la respuesta a utilizar HTTP / 1.0.
++ El cliente utiliza una cabecera de petición opcional (como Accept, Accept-Language, y etc.) para *negociar* con el servidor y perdirle que entregue contenidos de preferencia (por ejemplo, en el lenguaje de preferencia del cliente).
++ El mensaje de petición GET tiene un cuerpo de petición opcional que contiene la búsqueda (que será explicada después).
+
+**Probar peticiones HTTP*
+Hay varias formas de probar las peticiones HTTP. Se puede utilizar un programa como "telnet" o "hyperterm" (busque "telnet.exe" o "hipertrm.exe" en C:\Windows), o escriba su propio programa de la red para enviar mensaje de solicitud a un servidor HTTP para poner a prueba las diversas peticiones HTTP.
+
+**Telnet**
+"Telnet" es una utilidad de red muy útil. Puede utilizar telnet para establecer un TCP
