@@ -825,3 +825,118 @@ El siguiente ejemplo muestra una petición TRACE emitida a través de un servido
  0
 ```
 (Para comparar la solicitud de rastreo con el trazado de ruta)
+
+### Formularios HTML de envío y datos de cadena de consulta
+En muhas de las aplicaciones de internet, como comercio-en-línea y los buscadores, se requiere que los clientes presenten información adicional(por ejemplo, nombre, dirección, y palabras clave). Basado en las datos suministrados, el sirvidor toma la acción apropiada y produce una respuesta customizada.
+
+Los clientes son usualmente presentarse con un formulario (creado con la etiquetea HTML <form>). Una vez que terminan de llenar los datos requeridos y pulsan el boton de enviar, el buscador empaqueta los datos del formulario y los envía al servidor, utilizando una petición GET o POST.
+
+El siguiente es un ejemplo de un formulario HTML, que es generado por el siguiente ódigo de HTML:
+```HTML
+ <html>
+ <head><title>A Sample HTML Form</title></head>
+ <body>
+   <h2 align="left">A Sample HTML Data Entry Form</h2>
+   <form method="get" action="/bin/process">
+     Enter your name: <input type="text" name="username"><br />
+     Enter your password: <input type="password" name="password"><br />
+     Which year?
+     <input type="radio" name="year" value="2" />Yr 1
+     <input type="radio" name="year" value="2" />Yr 2
+     <input type="radio" name="year" value="3" />Yr 3<br />
+     Subject registered:
+     <input type="checkbox" name="subject" value="e101" />E101
+     <input type="checkbox" name="subject" value="e102" />E102
+     <input type="checkbox" name="subject" value="e103" />E103<br />
+     Select Day:
+     <select name="day">
+       <option value="mon">Monday</option>
+       <option value="wed">Wednesday</option>
+       <option value="fri">Friday</option>
+     </select><br />
+     <textarea rows="3" cols="30">Enter your special request here</textarea><br />
+     <input type="submit" value="SEND" />
+     <input type="reset" value="CLEAR" />
+     <input type="hidden" name="action" value="registration" />
+   </form>
+ </body>
+ </html>
+```
+![FormularioHTMLdeejemplo](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTML_SampleForm.png)
+
+Un formulario contiene campos. Los tipos de campo incluyen:
++ Text Box: producida por ```<input type = "text">```.
++ Password Box: producida por ```<input type = "password">```.
++ Radio Button: producida por ```<input type = "radio">```.
++ CheckBox: producida por ```<input type = "checkbox">```.
++ Selection: producida por ```<select>``` y producida por ```<option>```.
++ Text Area: producida por ```<textarea>```.
++ Submit Button: producida por ```<input type = "submit">```.
++ Reset Button: producida por ```<input type = "reset">```.
++ Button: producida por ```<input type = "button">```.
+
+Cada campo tiene un *nombre* y puede tomar un *valor* específico. Una vez que el cliente llena cada uno de los campos y pulsa el botón enviar, el buscador recoge cada uno de los nombres y valores de los campos, los empaqueta en pares "nombre = valor", y concatena todos los campos uilizando "&" como separador de campos. Esto es conocido como una *cadena de consulta*. Será enviada la cadena de consulta al servidor como parte de la petición.
+
+```name1=value1&name2=value2&name3=value3&... ```
+
+Los caracteres especiales no son admitidos dentro de la cadena de consulta. Estos debes ser remplazados por un "%" seguido de su código ASCII en hexadecimal. P. ej.m "~" es reemplazado por "%7E", "#" por "%23" y así. Puesto que el espacio es muy común, puede ser reemplazado por "%20" o "+" (el caracter "+" debe ser remplazado por "%2B"). Este proceso de reemplazamiento se llama *URL-encoding* (codificado de URL), y el resultado es un *URL-encoded query string*. POr ejemplo, suponga que hay 3 campos dentro de un formulario, con el nombre/valor de "name = Peter Lee", "address = #123 Happy Ave" y "language =C++", la URL-encoded es:
+
+```name=Peter+Lee&address=%23123+Happy+Ave&Language=C%2B%2B ```
+
+La cadena de consulta puede ser enviada al servidor utilizando el método de petici+on HTTP GET o POST, lo que se especifica en el atributo ```"method"``` de la etiqueta <form>.
+
+``` <form method="get|post" action="url"> ```
+
+Si se utiliza el método de petición GET, la URL-encoded query string (la cadena de consulta con codificación-URL) se añadirá detrás de la request-URI (URI de solicitud) después de un caracter "?", por ejemplo
+
+```
+GET request-URI?query-string HTTP-version
+(other optional request headers)
+(blank line)
+(optional request body)
+```
+
+Utilizando la petición GET para enviar la cadena de consulta se tienen los siguientes inconvenientes:
++ La cantidad de datos se puede agregar detrás de *request-URI* es limitado. Si esta cantidad excede un umbral específico del servidor, el servidor devolverá un error "414 URI de la solicitud demasiado grande".
++ La URL-encoded query string debe aparecer en la caja de direcciones del buscador.
+
+El método POST vence estos inconvenientes. Si el método de petición POST es utilizado, la cadena de consulta será enciada en el cuerpo del mensaje de petición, donde el tamaño no está limitado. La cabecera de petición ```Content - Type``` y ```Content - Length``` son utilizadas para notificar al servidor el tipo y longitud de la cadena de consulta. La cadena de consulta no aparecerá en la caja de direcciones del buscador. El método POSR será disutido después.
+
+**Ejemplo**
+
+El sigueinte formulario HTML es utilizado para recolecta el username (nombre de usuario) y contraseña en un menú de login (acceso).
+
+```HTML
+<html>
+<head><title>Login</title></head>
+<body>
+  <h2>LOGIN</h2>
+  <form method="get" action="/bin/login">
+    Username: <input type="text" name="user" size="25" /><br />
+    Password: <input type="password" name="pw" size="10" /><br /><br />
+    <input type="hidden" name="action" value="login" />
+    <input type="submit" value="SEND" />
+  </form>
+</body>
+</html>
+```
+
+![LoginForm](https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/images/HTML_LoginForm.png)
+
+El método de petición HTTP GET es utilizado para enviar cadenas de consulta. Suponga que el usuario ingresa "Peter Lee" como el nombre de usuria y como contraseña "123456"; y presiona el botón de enviar. La petición GET sería:
+
+```
+GET /bin/login?user=Peter+Lee&pw=123456&action=login HTTP/1.1
+Accept: image/gif, image/jpeg, */*
+Referer: http://127.0.0.1:8000/login.html
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+Connection: Keep-Alive
+```
+
+Tenga en cuenta que aunque la contraseña que introduzca no se muestra en la pantalla, se muestra claramente en el cuadro de dirección del navegador. Nunca se debe utilizar enviar la contraseña sin cifrado adecuado.
+
+```http://127.0.0.1:8000/bin/login?user=Peter+Lee&pw=123456&action=login```
+
