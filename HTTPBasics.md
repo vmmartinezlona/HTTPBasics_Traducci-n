@@ -938,5 +938,59 @@ Connection: Keep-Alive
 
 Tenga en cuenta que aunque la contraseña que introduzca no se muestra en la pantalla, se muestra claramente en el cuadro de dirección del navegador. Nunca se debe utilizar enviar la contraseña sin cifrado adecuado.
 
-```http://127.0.0.1:8000/bin/login?user=Peter+Lee&pw=123456&action=login```
+```http://127.0.0.1:8000/bin/login?user=Peter+Lee&pw=123456&action=login ```
 
+### URL y URI
+
+Una URL (Uniform Resource Locator, Localizador Uniforme de Recursos), definida en RFC 2396, es utilizasa para identificar de forma única un recuerso en la web. La URL tiene la siguiente sintaxis:
+``` protocol://hostname:port/path-and-file-name ```
+
+Hay 4 partes en una URL:
+1. *Protocolo*: El protocolo de capa de aplicación utilizado por el ciente y el servidor, p.ej., HTTP, FTP, y telnet.
+2. *Hostname*(nombre del host): El dominio DNS (p.ejm, ``` www.nowhere123.com ```) o la dirección IP (p.ejm., 192.128.1.2) del servidor.
+3. *Puerto*: El núemro del puerto TCP que el servidor está escuchando por peticiones entrantes del cliente.
+4. *Path-and-file-name*: El nombre y localización del recuerso solicitado, bajo el directorio de documentos del servidor.
+
+Por ejemplo, en la URL ``` http://www.nowhere123.com/docs/index.html ```, el protocolo de comunicación es HTTP; el nombre del servidor es www.nowhere123.com. El número del puerto no es espeificado en la URL, y toma el número por defecto, que para HTTP en TCP el puerto es 80 [STD 2]. El path-and-file-name del recurso a ser localizado es ``` "/docs/index.html ```.
+
+Otros ejemplos de URL son:
+
+```
+ftp://www.ftp.org/docs/test.txt
+mailto:user@test101.com
+news:soc.culture.Singapore
+telnet://www.nowhere123.com/
+```
+
+*URL codifiada*
+
+La UR no puede contener caracteres especiales, como espacios o '~'. Los caracteres especiales con codificados de la forma %xx, donde xx es el código ASCII en hexadecimal. Por ejemplo, '~' es codificado como %2b. El espacio puede ser codificado como %20 o '+'. La URL codificado es llamada *encoded-URL* (URL codificada).
+
+*URI (Uniform Resoure Identifier, Identificador uniforme de recursos)*
+
+El URI está definido en RFC3986, es más general que la URL, que puede incluso localizar un fragmento dentro de un recurso. La sintaxis de URL para el protocolo HTTP es:
+
+``` http://host:port/path?request-parameters#nameAnchor ```
+
++ Los parámetros de la petición, en forma de pares name/value, se separan de la URL por un '?'. Los pares de name = value están separados por un '&'.
++ El #nameAnchor identifica un fragmento dentro de un documento HTML, definido por la etiqueta anchor <a name = "anchorName">...>/a>.
++ Reescritura de URL para la gestión de sesiones, por ejemplo: "...; sessionID = xxxxxx".
+
+### Método de petición "POST"
+
+El método de petición POST es utilizado para enviar datos adicionales al servidor. (p. ejem., enviar datos de un formulario HTML o subir un archivo). Emitir una HTTP-URL del seridor siempre desencadena una petición GET. Para desencadenar una petición POST, puede utilizar un formulario HTML con el attributo ``` method = "post" ``` o escribir su propio programa de red. Para enviar datos de un formulario HTML, la petición POST es la misma que la petiión GET exceptuando que la cadena de consulta con codificación-URL es enviada en el cuerpo de la petición, en lugar de añadir detrás de la *request-URI* (URI de solicitud).
+
+La petición POST tiene la sigueinte sintaxis:
+
+```
+POST request-URI HTTP-version
+Content-Type: mime-type
+Content-Length: number-of-bytes
+(other optional request headers)
+  
+(URL-encoded query string)
+```
+
+Las cabeceras de petición ``` Content - Type ``` y ``` Content - Length ``` es necesario en la petición POST para informar al servidor el tipo de dato y longitud del cuerpo de petición.
+
+**Ejemplo: Envío de formulario de datos utilizando método de petición POST**
